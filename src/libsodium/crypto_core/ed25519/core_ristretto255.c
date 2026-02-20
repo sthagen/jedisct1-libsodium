@@ -82,20 +82,11 @@ _string_to_element(unsigned char *p,
 
 int
 crypto_core_ristretto255_from_string(unsigned char p[crypto_core_ristretto255_BYTES],
-                                     const unsigned char *ctx, size_t ctx_len,
-                                     const unsigned char *msg, size_t msg_len,
-                                     int hash_alg)
-{
-    return _string_to_element(p, ctx, ctx_len, msg, msg_len, hash_alg);
-}
-
-int
-crypto_core_ristretto255_from_string_ro(unsigned char p[crypto_core_ristretto255_BYTES],
                                         const unsigned char *ctx, size_t ctx_len,
                                         const unsigned char *msg, size_t msg_len,
                                         int hash_alg)
 {
-    return crypto_core_ristretto255_from_string(p, ctx, ctx_len, msg, msg_len, hash_alg);
+    return _string_to_element(p, ctx, ctx_len, msg, msg_len, hash_alg);
 }
 
 void
@@ -168,30 +159,14 @@ crypto_core_ristretto255_scalar_is_canonical(const unsigned char *s)
     return sc25519_is_canonical(s);
 }
 
-#define HASH_SC_L 48U
-
 int
 crypto_core_ristretto255_scalar_from_string(unsigned char *s,
                                             const unsigned char *ctx, size_t ctx_len,
                                             const unsigned char *msg, size_t msg_len,
                                             int hash_alg)
 {
-    unsigned char h[crypto_core_ristretto255_NONREDUCEDSCALARBYTES];
-    unsigned char h_be[HASH_SC_L];
-    size_t        i;
-
-    if (core_h2c_string_to_hash(h_be, sizeof h_be, ctx, ctx_len, msg, msg_len,
-                                hash_alg) != 0) {
-        return -1;
-    }
-    COMPILER_ASSERT(sizeof h >= sizeof h_be);
-    for (i = 0U; i < HASH_SC_L; i++) {
-        h[i] = h_be[HASH_SC_L - 1U - i];
-    }
-    memset(&h[i], 0, (sizeof h) - i);
-    crypto_core_ristretto255_scalar_reduce(s, h);
-
-    return 0;
+    return crypto_core_ed25519_scalar_from_string(s, ctx, ctx_len, msg, msg_len,
+                                                  hash_alg);
 }
 
 size_t
