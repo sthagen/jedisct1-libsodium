@@ -4,6 +4,7 @@
 .done
 .DS_Store
 .libs
+.swival
 .zig-cache
 *.bc
 *.done
