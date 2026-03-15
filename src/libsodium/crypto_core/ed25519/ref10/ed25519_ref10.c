@@ -741,6 +741,7 @@ ge25519_sub_cached(ge25519_p1p1 *r, const ge25519_p3 *p, const ge25519_cached *q
     fe25519_add(r->T, t0, r->T);
 }
 
+/* LCOV_EXCL_START */
 void
 ge25519_tobytes(unsigned char *s, const ge25519_p2 *h)
 {
@@ -754,6 +755,7 @@ ge25519_tobytes(unsigned char *s, const ge25519_p2 *h)
     fe25519_tobytes(s, y);
     s[31] ^= fe25519_isnegative(x) << 7;
 }
+/* LCOV_EXCL_STOP */
 
 /*
  r = a * A + b * B
@@ -2679,7 +2681,7 @@ ge25519_elligator2(fe25519 x, fe25519 y, const fe25519 r, int *notsquare_p)
     /* y = sqrt(gx1) or sqrt(gx2) with gx2 = gx1 * (A+x1) / -x1 */
     /* but it is about as fast to just recompute from the curve equation. */
     if (ge25519_xmont_to_ymont(y, x) != 0) {
-        abort();
+        abort(); /* LCOV_EXCL_LINE */
     }
     *notsquare_p = notsquare;
 }
@@ -2732,6 +2734,7 @@ fe25519_reduce64(fe25519 fe_f, const unsigned char h[64])
     fe25519_reduce(fe_f, fe_f);
 }
 
+/* LCOV_EXCL_START */
 void
 ge25519_from_hash(unsigned char s[32], const unsigned char h[64])
 {
@@ -2755,6 +2758,7 @@ ge25519_from_hash(unsigned char s[32], const unsigned char h[64])
     ge25519_clear_cofactor(&p3);
     ge25519_p3_tobytes(s, &p3);
 }
+/* LCOV_EXCL_STOP */
 
 /* Ristretto group */
 

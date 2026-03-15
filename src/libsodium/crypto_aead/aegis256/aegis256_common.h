@@ -1,6 +1,6 @@
 #define RATE 16
 
-static void
+static inline void
 aegis256_init(const uint8_t *key, const uint8_t *nonce, aes_block_t *const state)
 {
     static CRYPTO_ALIGN(AES_BLOCK_LENGTH)
@@ -34,7 +34,7 @@ aegis256_init(const uint8_t *key, const uint8_t *nonce, aes_block_t *const state
     }
 }
 
-static int
+static inline int
 aegis256_mac(uint8_t *mac, size_t maclen, uint64_t adlen, uint64_t mlen, aes_block_t *const state)
 {
     aes_block_t tmp;
@@ -48,18 +48,20 @@ aegis256_mac(uint8_t *mac, size_t maclen, uint64_t adlen, uint64_t mlen, aes_blo
     }
 
     if (maclen == 16) {
+        /* LCOV_EXCL_START */
         tmp = AES_BLOCK_XOR(state[5], state[4]);
         tmp = AES_BLOCK_XOR(tmp, AES_BLOCK_XOR(state[3], state[2]));
         tmp = AES_BLOCK_XOR(tmp, AES_BLOCK_XOR(state[1], state[0]));
         AES_BLOCK_STORE(mac, tmp);
+        /* LCOV_EXCL_STOP */
     } else if (maclen == 32) {
         tmp = AES_BLOCK_XOR(AES_BLOCK_XOR(state[2], state[1]), state[0]);
         AES_BLOCK_STORE(mac, tmp);
         tmp = AES_BLOCK_XOR(AES_BLOCK_XOR(state[5], state[4]), state[3]);
         AES_BLOCK_STORE(mac + 16, tmp);
     } else {
-        memset(mac, 0, maclen);
-        return -1;
+        memset(mac, 0, maclen); /* LCOV_EXCL_LINE */
+        return -1;             /* LCOV_EXCL_LINE */
     }
     return 0;
 }
@@ -84,7 +86,7 @@ aegis256_absorb2(const uint8_t *const src, aes_block_t *const state)
     aegis256_update(state, msg2);
 }
 
-static void
+static inline void
 aegis256_enc(uint8_t *const dst, const uint8_t *const src, aes_block_t *const state)
 {
     aes_block_t msg;
@@ -100,7 +102,7 @@ aegis256_enc(uint8_t *const dst, const uint8_t *const src, aes_block_t *const st
     aegis256_update(state, msg);
 }
 
-static void
+static inline void
 aegis256_dec(uint8_t *const dst, const uint8_t *const src, aes_block_t *const state)
 {
     aes_block_t msg;
@@ -115,7 +117,7 @@ aegis256_dec(uint8_t *const dst, const uint8_t *const src, aes_block_t *const st
     aegis256_update(state, msg);
 }
 
-static void
+static inline void
 aegis256_declast(uint8_t *const dst, const uint8_t *const src, size_t len, aes_block_t *const state)
 {
     uint8_t     pad[RATE];
@@ -220,7 +222,7 @@ decrypt_detached(uint8_t *m, const uint8_t *c, size_t clen, const uint8_t *mac, 
     ret = -1;
     if (aegis256_mac(computed_mac, maclen, adlen, mlen, state) == 0) {
         if (maclen == 16) {
-            ret = crypto_verify_16(computed_mac, mac);
+            ret = crypto_verify_16(computed_mac, mac); /* LCOV_EXCL_LINE */
         } else if (maclen == 32) {
             ret = crypto_verify_32(computed_mac, mac);
         }

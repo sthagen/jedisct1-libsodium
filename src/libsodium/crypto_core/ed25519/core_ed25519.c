@@ -74,7 +74,7 @@ _string_to_points(unsigned char * const px, const size_t n,
     }
     if (core_h2c_string_to_hash(h_be, n * HASH_GE_L, ctx, ctx_len, msg, msg_len,
                                 hash_alg) != 0) {
-        return -1;
+        return -1; /* LCOV_EXCL_LINE */
     }
     COMPILER_ASSERT(sizeof h >= HASH_GE_L);
     for (i = 0U; i < n; i++) {
@@ -87,6 +87,7 @@ _string_to_points(unsigned char * const px, const size_t n,
     return 0;
 }
 
+/* LCOV_EXCL_START */
 int
 crypto_core_ed25519_from_string_nu(unsigned char p[crypto_core_ed25519_BYTES],
                                    const unsigned char *ctx, size_t ctx_len,
@@ -109,6 +110,7 @@ crypto_core_ed25519_from_string(unsigned char p[crypto_core_ed25519_BYTES],
     }
     return crypto_core_ed25519_add(p, &px[0], &px[crypto_core_ed25519_BYTES]);
 }
+/* LCOV_EXCL_STOP */
 
 void
 crypto_core_ed25519_random(unsigned char *p)
