@@ -42,6 +42,7 @@ SODIUM_EXPORT = \
 	sodium/crypto_pwhash.h \
 	sodium/crypto_pwhash_argon2i.h \
 	sodium/crypto_pwhash_argon2id.h \
+	sodium/crypto_pwhash_bogo.h \
 	sodium/crypto_pwhash_scryptsalsa208sha256.h \
 	sodium/crypto_scalarmult.h \
 	sodium/crypto_scalarmult_curve25519.h \

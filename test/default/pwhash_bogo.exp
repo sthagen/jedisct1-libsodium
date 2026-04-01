@@ -1,0 +1,21 @@
+alg_default: 1
+bytes_min: 16
+saltbytes: 16
+strbytes: 128
+strprefix: $bogo$
+primitive: bogosort
+sorted password: 0
+13e4953321cef001fd84a96bcdceef16ac888f15db127d56e04158877909466b
+empty password: 0
+afb97f1af063b336d8469ac782b3d847f375a7658834730a1c3b361d972b8ac3
+single byte: 0
+repeated bytes: 0
+long unsorted password: -1
+invalid alg: -1
+output too short: -1
+str: 0
+str starts with prefix: 1
+str_verify correct: 0
+str_verify wrong: -1
+needs_rehash: 1
+needs_rehash wrong prefix: -1

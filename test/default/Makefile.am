@@ -68,6 +68,7 @@ EXTRA_DIST = \
 	pwhash_argon2i.exp \
 	pwhash_argon2id.exp \
 	pwhash_argon2id2.exp \
+	pwhash_bogo.exp \
 	pwhash_scrypt.exp \
 	pwhash_scrypt_ll.exp \
 	randombytes.exp \
@@ -175,6 +176,7 @@ DISTCLEANFILES = \
 	pwhash_argon2i.res \
 	pwhash_argon2id.res \
 	pwhash_argon2id2.res \
+	pwhash_bogo.res \
 	pwhash_scrypt.res \
 	pwhash_scrypt_ll.res \
 	randombytes.res \
@@ -283,6 +285,7 @@ TESTS_TARGETS = \
 	pwhash_argon2i \
 	pwhash_argon2id \
 	pwhash_argon2id2 \
+	pwhash_bogo \
 	randombytes \
 	scalarmult \
 	scalarmult2 \
@@ -516,6 +519,9 @@ pwhash_argon2id_LDADD     = $(TESTS_LDADD)
 
 pwhash_argon2id2_SOURCE   = cmptest.h pwhash_argon2id2.c
 pwhash_argon2id2_LDADD    = $(TESTS_LDADD)
+
+pwhash_bogo_SOURCE        = cmptest.h pwhash_bogo.c
+pwhash_bogo_LDADD         = $(TESTS_LDADD)
 
 pwhash_scrypt_SOURCE      = cmptest.h pwhash_scrypt.c
 pwhash_scrypt_LDADD       = $(TESTS_LDADD)
