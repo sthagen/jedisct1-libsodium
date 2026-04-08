@@ -12,6 +12,14 @@ permissions:
   contents: read
 
 jobs:
+  version-consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Check version consistency
+        run: ./test/check-version-consistency.sh
+
   tcc:
     runs-on: ubuntu-latest
     steps:
@@ -70,6 +78,15 @@ jobs:
           zig build -Dtarget=wasm32-wasi
           zig build -Doptimize=ReleaseFast
           rm -fr zig-cache zig-out
+
+      - name: Tests with zig
+        run: |
+          zig build test
+          zig build test-vectors
+          zig build test -Doptimize=ReleaseSafe
+          zig build test-vectors -Doptimize=ReleaseSafe
+          zig build test -Doptimize=ReleaseFast
+          zig build test-vectors -Doptimize=ReleaseFast
 
   regular:
     runs-on: ubuntu-latest

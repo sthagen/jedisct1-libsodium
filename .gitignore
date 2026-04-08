@@ -41,6 +41,8 @@ confdefs.h
 config.*
 configure
 configure.lineno
+conftest.c
+conftest.err
 coverage.info
 depcomp
 INSTALL
@@ -193,6 +195,7 @@ test/js.done
 test/symbols/all-host-symbols.txt
 test/symbols/internal-host-symbols.txt
 test/symbols/internal-symbols.txt
+test/vectors/cache/
 testing
 Vagrantfile
 zig-cache
