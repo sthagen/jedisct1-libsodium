@@ -237,8 +237,6 @@ dnl Checks
 
 AC_C_VARARRAYS
 
-AC_CHECK_DEFINE([__wasi__], [WASI="yes"], [])
-
 AS_CASE([$host_os], [linux-gnu], [AX_ADD_FORTIFY_SOURCE], [ ])
 
 AX_CHECK_COMPILE_FLAG([-fvisibility=hidden],
@@ -842,6 +840,21 @@ __asm__ __volatile__ ("xchgl %%ebx, %k1; cpuid; xchgl %%ebx, %k1" :
   ])
 AC_SUBST(HAVE_CPUID_V)
 
+AS_CASE([$host_cpu], [i?86|amd64|x86_64], [
+  AS_IF([test "$enable_asm" != "no"],[
+    AC_MSG_CHECKING(whether XGETBV can be used with inline assembly)
+    AC_LINK_IFELSE([AC_LANG_PROGRAM([[ ]], [[
+unsigned int xcr0;
+__asm__ __volatile__(".byte 0x0f, 0x01, 0xd0" :
+                     "=a" (xcr0) :
+                     "c" ((unsigned int) 0U) : "%edx");
+    ]])],
+    [AC_MSG_RESULT(yes)
+     AC_DEFINE([HAVE_XGETBV_ASM], [1], [XGETBV can be used with inline assembly])],
+    [AC_MSG_RESULT(no)])
+  ])
+])
+
 asm_hide_symbol="unsupported"
 AS_IF([test "$enable_asm" != "no"],[
   AC_MSG_CHECKING(if the .private_extern asm directive is supported)
@@ -932,11 +945,9 @@ dnl Checks for functions and headers
 AC_FUNC_ALLOCA
 AS_IF([test "x$EMSCRIPTEN" = "x"],[
   AC_CHECK_FUNCS([arc4random arc4random_buf])
-  AS_IF([test "x$WASI" = "x"],[
-    AC_CHECK_FUNCS([mmap mlock madvise mprotect])
-    AC_CHECK_FUNCS([raise])
-    AC_CHECK_FUNCS([sysconf])
-  ])
+  AC_CHECK_FUNCS([mmap mlock madvise mprotect])
+  AC_CHECK_FUNCS([raise])
+  AC_CHECK_FUNCS([sysconf])
   AC_MSG_CHECKING(for getrandom with a standard API)
   AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <stdlib.h>
@@ -974,16 +985,12 @@ if (&getentropy != NULL) {
   ])
 ])
 
-AS_IF([test "x$WASI" = "x"],[
-  AC_CHECK_FUNCS([getpid])
-  AC_CHECK_FUNCS([getauxval elf_aux_info])
-])
+AC_CHECK_FUNCS([getpid])
+AC_CHECK_FUNCS([getauxval elf_aux_info])
 
 AC_CHECK_FUNCS([posix_memalign nanosleep clock_gettime])
 
-AS_IF([test "x$WASI" = "x"],[
-  AC_CHECK_FUNCS([memset_s explicit_bzero memset_explicit explicit_memset])
-])
+AC_CHECK_FUNCS([memset_s explicit_bzero memset_explicit explicit_memset])
 
 AC_SUBST([LIBTOOL_EXTRA_FLAGS])
 
@@ -994,7 +1001,6 @@ AS_IF([test "x$EMSCRIPTEN" != "x"],[
 ])
 AC_SUBST(TEST_LDFLAGS)
 AM_CONDITIONAL([EMSCRIPTEN], [test "x$EMSCRIPTEN" != "x"])
-AM_CONDITIONAL([WASI], [test "x$WASI" != "x"])
 
 AC_DEFINE([CONFIGURED], [1], [the build system was properly configured])
 

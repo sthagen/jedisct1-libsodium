@@ -17,21 +17,21 @@ jobs:
         with:
           persist-credentials: false
       - name: buildbase.bat
-        run: buildbase.bat ..\vs2022\libsodium.sln 17
+        run: buildbase.bat ..\vs2026\libsodium.sln 18
         working-directory: builds/msvc/build/
         shell: cmd
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: build-win-x64
-          path: bin/x64/Release/v143/dynamic/libsodium.dll
+          path: bin/x64/Release/v145/dynamic/libsodium.dll
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: build-win-x86
-          path: bin/Win32/Release/v143/dynamic/libsodium.dll
+          path: bin/Win32/Release/v145/dynamic/libsodium.dll
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: build-win-arm64
-          path: bin/ARM64/Release/v143/dynamic/libsodium.dll
+          path: bin/ARM64/Release/v145/dynamic/libsodium.dll
 
   build-others:
     runs-on: ubuntu-latest
